@@ -1,12 +1,11 @@
 import { EndedGame, Game, GameUpdate } from "./game/game.js"
 import { v4 as uuidv4 } from "uuid"
 import _fastify from "fastify"
+import { asdf } from "./game/prompt.js"
 
 const fastify = _fastify({ logger: true })
 
-/**
- * sessionId : Game
- */
+//sessionId:Game
 const games: Record<string, Game> = {}
 const endedGames: Record<string, EndedGame> = {}
 
@@ -21,7 +20,7 @@ fastify.get("/", async (request, reply) => {
 fastify.post("/start-game", async (request, reply) => {
     let gameId = uuidv4()
     games[gameId] = Game.create()
-    reply.send({ gameId })
+    return { gameId }
 })
 
 //ends a game if it exists
@@ -34,6 +33,12 @@ fastify.post("/end-game", async (request, reply) => {
     }
 
     delete games[gameId]
+    const endedGame = endedGames[gameId]
+    if (!endedGame) {
+        reply.status(500).send(`Game ${gameId} not found`)
+    }
+
+    return { endedGame }
 })
 
 //updates the world
@@ -49,9 +54,12 @@ fastify.post("/update-game", async (request, reply) => {
         return
     }
 
-    const updateEvents = game.update(update)
+    const results = game.update(update)
+    return { results }
+})
 
-    throw new Error("Not implemented") //todo return the response to update the world on the client
+fastify.get("/asdf", async (request, reply) => {
+    return await asdf()
 })
 
 // Run the server!

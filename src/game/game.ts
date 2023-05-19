@@ -1,25 +1,25 @@
-/**
- *
- */
 import { Position } from "../commons.js"
 
 export class Game {
-    lastUpdated: Date
+    updatedAt: Date
     npcs: Npc[]
     worldState: WorldState
+    chat?: Chat
 
-    constructor(lastUpdated: Date, npcs: Npc[], worldState: WorldState) {
-        this.lastUpdated = lastUpdated
+    constructor(updatedAt: Date, npcs: Npc[], worldState: WorldState) {
+        this.updatedAt = updatedAt
         this.npcs = npcs
         this.worldState = worldState
     }
 
     static create(): Game {
-        throw new Error("Not implemented") //todo
+        const npcs = createNpcs()
+        const worldState = createWorldState()
+        return new Game(new Date(), npcs, worldState)
     }
 
     update(update: GameUpdate): GameUpdateResult[] {
-        this.lastUpdated = new Date()
+        this.updatedAt = new Date()
 
         throw new Error("Not implemented") //todo
     }
@@ -30,7 +30,7 @@ export class Game {
 
     continueChat(playerMessage: String) {}
 
-    endChat(game: Game) {
+    endChat(): ChatResult {
         throw new Error("Not implemented") //todo
     }
 
@@ -40,7 +40,7 @@ export class Game {
 }
 
 export type EndedGame = {
-    lastUpdated: Date
+    endedAt: Date
 }
 
 export type GameUpdate = {
@@ -50,11 +50,35 @@ export type GameUpdate = {
 
 export type WorldUpdate = {}
 export type NpcUpdate = {}
+
 export type GameUpdateResult = {}
 
+export enum ChatResultType {
+    CONTINUE = "CONTINUE",
+    FOLLOW = "FOLLOW",
+    DO_NOTHING = "DO_NOTHING",
+}
+
+export type ContinueChatResult = {
+    type: ChatResultType.CONTINUE
+}
+export type FollowNpcChatResult = {
+    type: ChatResultType.FOLLOW
+    position: Position
+}
+export type DoNothingChatResult = {
+    type: ChatResultType.DO_NOTHING
+}
+
+export type ChatResult = ContinueChatResult | FollowNpcChatResult | DoNothingChatResult
+
 type WorldState = {
-    preface: string
-    currentChat: Chat
+    preamble: string
+    chat?: Chat
+}
+
+function createWorldState(): WorldState {
+    throw new Error("Not implemented") //todo
 }
 
 type Npc = {
@@ -67,15 +91,15 @@ type ChatMessage = {
     message: string
 }
 
-type Chat = {
+export type Chat = {
     npcName: string
     messageHistory: ChatMessage[]
 }
 
 function createNpcs(): Npc[] {
-    return [newNpc(), newNpc()]
+    return [createNpc(), createNpc()]
 }
 
-function newNpc(): Npc {
+function createNpc(): Npc {
     throw new Error("Not implemented") //todo
 }
