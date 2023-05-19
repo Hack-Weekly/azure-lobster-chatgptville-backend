@@ -1,4 +1,4 @@
-import { endGame, Game, GameUpdate, newGame, updateGame } from "./game/game.js"
+import { EndedGame, Game, GameUpdate } from "./game/game.js"
 import { v4 as uuidv4 } from "uuid"
 import _fastify from "fastify"
 
@@ -8,6 +8,7 @@ const fastify = _fastify({ logger: true })
  * sessionId : Game
  */
 const games: Record<string, Game> = {}
+const endedGames: Record<string, EndedGame> = {}
 
 // Require the framework and instantiate it
 
@@ -19,7 +20,7 @@ fastify.get("/", async (request, reply) => {
 //starts a new game
 fastify.post("/start-game", async (request, reply) => {
     let gameId = uuidv4()
-    games[gameId] = newGame()
+    games[gameId] = Game.create()
     reply.send({ gameId })
 })
 
@@ -29,7 +30,7 @@ fastify.post("/end-game", async (request, reply) => {
 
     const game = games[gameId]
     if (game) {
-        endGame(game)
+        endedGames[gameId] = game.end()
     }
 
     delete games[gameId]
@@ -48,7 +49,7 @@ fastify.post("/update-game", async (request, reply) => {
         return
     }
 
-    const updateEvents = updateGame(game, update)
+    const updateEvents = game.update(update)
 
     throw new Error("Not implemented") //todo return the response to update the world on the client
 })

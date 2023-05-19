@@ -1,22 +1,60 @@
 /**
  *
  */
-export type Game = {
+import { Position } from "../commons.js"
+
+export class Game {
     lastUpdated: Date
-    npcs: Record<string, Npc>
+    npcs: Npc[]
     worldState: WorldState
+
+    constructor(lastUpdated: Date, npcs: Npc[], worldState: WorldState) {
+        this.lastUpdated = lastUpdated
+        this.npcs = npcs
+        this.worldState = worldState
+    }
+
+    static create(): Game {
+        throw new Error("Not implemented") //todo
+    }
+
+    update(update: GameUpdate): GameUpdateResult[] {
+        this.lastUpdated = new Date()
+
+        throw new Error("Not implemented") //todo
+    }
+
+    startChat(game: Game, npcId: string) {
+        throw new Error("Not implemented") //todo
+    }
+
+    continueChat(playerMessage: String) {}
+
+    endChat(game: Game) {
+        throw new Error("Not implemented") //todo
+    }
+
+    end(): EndedGame {
+        throw new Error("Not implemented") //todo
+    }
 }
 
-export type GameUpdate = {}
-export type TimeUpdate = {}
+export type EndedGame = {
+    lastUpdated: Date
+}
+
+export type GameUpdate = {
+    worldUpdate: WorldUpdate
+    npcUpdates: NpcUpdate[]
+}
+
 export type WorldUpdate = {}
 export type NpcUpdate = {}
-
-export type GameEvent = {}
+export type GameUpdateResult = {}
 
 type WorldState = {
     preface: string
-    currentNpcChat: CurrentNpcChat
+    currentChat: Chat
 }
 
 type Npc = {
@@ -29,18 +67,9 @@ type ChatMessage = {
     message: string
 }
 
-type CurrentNpcChat = {
-    npcId: string
+type Chat = {
+    npcName: string
     messageHistory: ChatMessage[]
-}
-
-type Position = {
-    x: number
-    y: number
-}
-
-export function newGame(): Game {
-    throw new Error("Not implemented") //todo
 }
 
 function createNpcs(): Npc[] {
@@ -48,25 +77,5 @@ function createNpcs(): Npc[] {
 }
 
 function newNpc(): Npc {
-    throw new Error("Not implemented") //todo
-}
-
-export function updateGame(game: Game, update: WorldUpdate): GameEvent[] {
-    game.lastUpdated = new Date()
-
-    throw new Error("Not implemented") //todo
-}
-
-export function startChat(game: Game, npcId: string) {
-    throw new Error("Not implemented") //todo
-}
-
-export function endChat(game: Game) {
-    throw new Error("Not implemented") //todo
-}
-
-export function continueChat(game: Game, playerMessage: String) {}
-
-export function endGame(game: Game) {
     throw new Error("Not implemented") //todo
 }
