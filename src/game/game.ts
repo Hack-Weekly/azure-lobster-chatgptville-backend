@@ -1,13 +1,12 @@
 import { WorldPosition } from "../commons.js"
 
 export class Game {
-    updatedAt: Date
+    storySoFar: string
     npcs: Npc[]
     worldState: World
     chat?: Chat
 
-    constructor(updatedAt: Date, npcs: Npc[], worldState: World) {
-        this.updatedAt = updatedAt
+    constructor(npcs: Npc[], worldState: World) {
         this.npcs = npcs
         this.worldState = worldState
     }
@@ -15,12 +14,10 @@ export class Game {
     static create(): Game {
         const npcs = createNpcs()
         const worldState = createWorldState()
-        return new Game(new Date(), npcs, worldState)
+        return new Game(npcs, worldState)
     }
 
     update(update: GameUpdate): GameUpdateResult[] {
-        this.updatedAt = new Date()
-
         throw new Error("Not implemented") //todo
     }
 
@@ -54,7 +51,10 @@ function createNpc(): Npc {
 
 //world
 export type World = {
+    //player submitted text that is used at the beginning of our short story
     preamble: string
+    //player submitted text that is used to instruct chatgpt on how to guide the story, but not used in the short story text
+    objective: string
 }
 export type Npc = {
     name: string

@@ -1,7 +1,9 @@
 import { Landmark, Npc, World } from "./game.js"
 
 export const chatgptvilleWorld: World = {
-    preamble: `Once upon a time there were six friends who went to live on a ranch in the countryside. They all worked together to get the day's work done.  This is the story of one day in Chatgptville.  `,
+    preamble:
+        "Once upon a time there were six friends who went to live on a ranch in the countryside. They all worked together to get the day's work done.  This is the story of one day in Chatgptville...",
+    objective: "the friends should work together to throw a party at the lakehouse later that night",
 }
 
 //💙
@@ -23,7 +25,7 @@ Languages/Skills: Javascript, Python, C/C++, HTML/CSS
 Frameworks: React, Vue
 Desired Role: Front-End
 Timezone: in Hong Kong rn but flying back to NA soon. sleep schedule is still in NA time LOL`,
-        landmark: "The Bridge",
+        landmark: "The Fishing Bridge",
     },
     {
         name: "Kickball",
@@ -62,23 +64,23 @@ Timezone: Eastern Standard Time (EST) `,
 export const landmarks: Landmark[] = [
     {
         name: "The House",
-        description: "A house",
+        description: "A house where the friends live and cook food.",
         position: {
             x: 0,
             y: 0,
         },
     },
     {
-        name: "The Bridge",
-        description: "A bridge",
+        name: "The Fishing Bridge",
+        description: "A bridge for fishing.",
         position: {
             x: 0,
             y: 0,
         },
     },
     {
-        name: "The Farm",
-        description: "A farm",
+        name: "The Small Farm",
+        description: "A farm with a variety of different special ingredients such as herbs, tomatoes, and berries.",
         position: {
             x: 0,
             y: 0,
@@ -86,7 +88,7 @@ export const landmarks: Landmark[] = [
     },
     {
         name: "The Big Farm",
-        description: "A big farm",
+        description: "A big farm for growing staple foods like grain, rice, and wheat.",
         position: {
             x: 0,
             y: 0,
@@ -100,10 +102,10 @@ export const landmarks: Landmark[] = [
             y: 0,
         },
     },
-
     {
-        name: "The Lanehouse",
-        description: "A lanehouse",
+        name: "The Lakehouse",
+        description:
+            "A lakehouse where the friends plan on throwing a party later that night.  Needs to be cleaned up and decorated.",
         position: {
             x: 0,
             y: 0,
