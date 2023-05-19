@@ -1,6 +1,7 @@
 import { Landmark, Npc, World } from "./game.js"
 
 export const chatgptvilleWorld: World = {
+    //might need to substitute "chatgptville" with "harvestville" so it doesn't confuse the ai
     preamble:
         "Once upon a time there were six friends who went to live on a ranch in the countryside. They all worked together to get the day's work done.  This is the story of one day in Chatgptville...",
     objective: "the friends should work together to throw a party at the lakehouse later that night",
