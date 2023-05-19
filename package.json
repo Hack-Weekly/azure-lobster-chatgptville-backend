@@ -21,6 +21,8 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
-        "source-map-support": "^0.5.21"
+        "fastify": "^4.17.0",
+        "source-map-support": "^0.5.21",
+        "uuid": "^9.0.0"
     }
 }
