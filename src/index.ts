@@ -41,7 +41,7 @@ fastify.post("/end-game", async (request, reply) => {
     return { endedGame }
 })
 
-//updates the world
+//updates the game
 fastify.post("/update-game", async (request, reply) => {
     const gameId = request.headers["game-id"] as string
 

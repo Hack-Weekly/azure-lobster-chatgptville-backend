@@ -23,6 +23,7 @@
     "dependencies": {
         "dotenv": "^16.0.3",
         "fastify": "^4.17.0",
+        "gpt-3-encoder": "^1.1.4",
         "openai": "^3.2.1",
         "source-map-support": "^0.5.21",
         "uuid": "^9.0.0"
