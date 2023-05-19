@@ -39,7 +39,7 @@ type Position = {
     y: number
 }
 
-export function newGame(preface: string): Game {
+export function newGame(): Game {
     throw new Error("Not implemented") //todo
 }
 

@@ -1,4 +1,4 @@
-import { endGame, Game, GameUpdate, updateGame } from "./game/game.js"
+import { endGame, Game, GameUpdate, newGame, updateGame } from "./game/game.js"
 import { v4 as uuidv4 } from "uuid"
 import _fastify from "fastify"
 
@@ -19,12 +19,13 @@ fastify.get("/", async (request, reply) => {
 //starts a new game
 fastify.post("/start-game", async (request, reply) => {
     let gameId = uuidv4()
+    games[gameId] = newGame()
     reply.send({ gameId })
 })
 
 //ends a game if it exists
 fastify.post("/end-game", async (request, reply) => {
-    const { gameId } = request.body as any
+    const { gameId } = request.body as { gameId: string }
 
     const game = games[gameId]
     if (game) {
