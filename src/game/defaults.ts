@@ -1,9 +1,9 @@
-import { Landmark, Npc, World } from "./game.js"
+import { GameLocation, Npc, World } from "./domain.js"
 
 export const chatgptvilleWorld: World = {
     //might need to substitute "chatgptville" with "harvestville" so it doesn't confuse the ai
     preamble:
-        "Once upon a time there were six friends who went to live on a ranch in the countryside. They all worked together to get the day's work done.  This is the story of one day in Chatgptville...",
+        "Once upon a time there were six friends who went to live in the countryside. This is the story of one day in Chatgptville...",
     objective: "the friends should work together to throw a party at the lakehouse later that night",
 }
 
@@ -17,7 +17,7 @@ Frameworks: N/A
 Desired Role: Backend engineer, could also serve as a project manager since I have background in Agile
 Timezone: Eastern Standard Time (EST) 
 `,
-        landmark: "The House",
+        location: "The House",
     },
     {
         name: "Soaps",
@@ -26,7 +26,7 @@ Languages/Skills: Javascript, Python, C/C++, HTML/CSS
 Frameworks: React, Vue
 Desired Role: Front-End
 Timezone: in Hong Kong rn but flying back to NA soon. sleep schedule is still in NA time LOL`,
-        landmark: "The Fishing Bridge",
+        location: "The Fishing Bridge",
     },
     {
         name: "Kickball",
@@ -35,12 +35,12 @@ Languages/Skills: JS/TS, Python
 Frameworks: React, Next
 Desired Role: Frontend
 Timezone: CST`,
-        landmark: "The Farm",
+        location: "The Farm",
     },
     {
         name: "Dqw",
         bio: `Hey everyone!  Thanks for joining.  I'm Dqw.  I'm graduating in Dec.   I've mainly worked on reverse engineering games, but I'm looking to get better at web technologies.  Timezone:pst, but I'm jetlagged ATM`,
-        landmark: "The Rock",
+        location: "The Rock",
     },
     {
         name: "Residentwitch",
@@ -49,7 +49,7 @@ Languages/Skills: C, Python, HTML/CSS, JS, Java, Dart (beginner), Figma (beginne
 Frameworks: React
 Desired Role: Frontend, could also work on UI
 Timezone: IST (Indian Standard Time)`,
-        landmark: "The Big Farm",
+        location: "The Big Farm",
     },
     {
         name: "Motaphe",
@@ -58,11 +58,11 @@ Languages/Skills: Python
 Frameworks: React (beginner)
 Desired Role: Backend, Prompt Engineer, Frontend(since I have started learning React)
 Timezone: Eastern Standard Time (EST) `,
-        landmark: "The Lanehouse",
+        location: "The Lakehouse",
     },
 ]
 
-export const landmarks: Landmark[] = [
+export const landmarks: GameLocation[] = [
     {
         name: "The House",
         description: "A house where the friends live and cook food.",

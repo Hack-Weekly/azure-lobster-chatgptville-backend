@@ -1,36 +1,48 @@
-import { WorldPosition } from "../commons.js"
+import * as dotenv from "dotenv"
+import { Configuration, OpenAIApi } from "openai"
+import { Chat, EndedGame, GameUpdate, Npc, World } from "./domain.js"
+
+dotenv.config()
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+})
+
+if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY environment variable is not set")
+}
+
+console.log("key" + process.env.OPENAI_API_KEY)
+export const openai = new OpenAIApi(configuration)
 
 export class Game {
-    storySoFar: string
     npcs: Npc[]
-    worldState: World
+    world: World
     chat?: Chat
+    storySoFar: string
 
-    constructor(npcs: Npc[], worldState: World) {
+    constructor(npcs: Npc[], world: World) {
         this.npcs = npcs
-        this.worldState = worldState
+        this.world = world
+        this.storySoFar = world.preamble + "\n\n"
     }
 
-    static create(): Game {
+    static async create() {
         const npcs = createNpcs()
         const worldState = createWorldState()
         return new Game(npcs, worldState)
     }
 
-    update(update: GameUpdate): GameUpdateResult[] {
+    async update(update: GameUpdate) {
         throw new Error("Not implemented") //todo
     }
 
-    startChat(game: Game, npcId: string) {
+    async startChat(game: Game, npcId: string) {
         throw new Error("Not implemented") //todo
     }
 
-    continueChat(playerMessage: String) {}
+    async continueChat(playerMessage: String) {}
 
-    endChat(): ChatResult {
-        throw new Error("Not implemented") //todo
-        this.chat = undefined
-    }
+    async endChat() {}
 
     end(): EndedGame {
         throw new Error("Not implemented") //todo
@@ -41,79 +53,10 @@ function createWorldState(): World {
     throw new Error("Not implemented") //todo
 }
 
-function createNpcs(): Npc[] {
+function createNpcs() {
     return [createNpc(), createNpc()]
 }
 
 function createNpc(): Npc {
     throw new Error("Not implemented") //todo
-}
-
-//world
-export type World = {
-    //player submitted text that is used at the beginning of our short story
-    preamble: string
-    //player submitted text that is used to instruct chatgpt on how to guide the story, but not used in the short story text
-    objective: string
-}
-export type Npc = {
-    name: string
-    bio: string
-    landmark: string
-}
-export type Landmark = {
-    name: string
-    description: string
-    position: WorldPosition
-}
-
-//updates
-export type GameUpdate = {
-    worldUpdate: WorldUpdate
-    npcUpdates: NpcUpdate[]
-}
-export type WorldUpdate = {}
-export type NpcUpdate = {}
-
-//update results
-export type NpcUpdateResult = {}
-export type WorldUpdateResult = {}
-export type GameUpdateResult = {}
-
-//chat
-export type Chat = {
-    npcName: string
-    messageHistory: ChatMessage[]
-}
-type ChatMessage = {
-    message: string
-}
-
-export enum ChatResultType {
-    CONTINUE = "CONTINUE",
-    FOLLOW_AND_CONTINUE = "FOLLOW_AND_CONTINUE", //walk to a differnt landmark and take the player and then continue chatting
-    WALK = "WALK", //walk to a different landmark
-    DO_NOTHING = "DO_NOTHING",
-}
-
-export type ContinueChatResult = {
-    type: ChatResultType.CONTINUE
-}
-export type FollowAndContinueChatResult = {
-    type: ChatResultType.FOLLOW_AND_CONTINUE
-    landmark: string
-}
-export type WalkChatResult = {
-    type: ChatResultType.WALK
-    landmark: string
-}
-export type DoNothingChatResult = {
-    type: ChatResultType.DO_NOTHING
-}
-export type ChatResult = ContinueChatResult | FollowAndContinueChatResult | DoNothingChatResult
-
-//end
-export type EndedGame = {
-    endedAt: Date
-    shortStory: string
 }

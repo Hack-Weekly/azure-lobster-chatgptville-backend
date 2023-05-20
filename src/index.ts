@@ -1,25 +1,18 @@
-import { EndedGame, Game, GameUpdate } from "./game/game.js"
+import { EndedGame, GameUpdate } from "./game/domain.js"
 import { v4 as uuidv4 } from "uuid"
 import _fastify from "fastify"
-import { asdf } from "./game/prompt.js"
+import { Game } from "./game/game.js"
 
 const fastify = _fastify({ logger: true })
 
-//sessionId:Game
+//gameId:Game
 const games: Record<string, Game> = {}
 const endedGames: Record<string, EndedGame> = {}
-
-// Require the framework and instantiate it
-
-// Declare a route
-fastify.get("/", async (request, reply) => {
-    return { hello: "world" }
-})
 
 //starts a new game
 fastify.post("/start-game", async (request, reply) => {
     let gameId = uuidv4()
-    games[gameId] = Game.create()
+    games[gameId] = await Game.create()
     return { gameId }
 })
 
@@ -35,7 +28,7 @@ fastify.post("/end-game", async (request, reply) => {
     delete games[gameId]
     const endedGame = endedGames[gameId]
     if (!endedGame) {
-        reply.status(500).send(`Game ${gameId} not found`)
+        reply.status(404).send(`Game ${gameId} not found`)
     }
 
     return { endedGame }
@@ -58,11 +51,6 @@ fastify.post("/update-game", async (request, reply) => {
     return { results }
 })
 
-fastify.get("/asdf", async (request, reply) => {
-    return await asdf()
-})
-
-// Run the server!
 const start = async () => {
     try {
         await fastify.listen({ port: 3000 })
@@ -71,4 +59,5 @@ const start = async () => {
         process.exit(1)
     }
 }
-start().then((r) => console.log("Server started!"))
+
+await start()
