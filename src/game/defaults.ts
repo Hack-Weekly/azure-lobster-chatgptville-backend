@@ -62,7 +62,7 @@ Timezone: Eastern Standard Time (EST) `,
     },
 ]
 
-export const landmarks: GameLocation[] = [
+export const chatgptvilleLocations: GameLocation[] = [
     {
         name: "The House",
         description: "A house where the friends live and cook food.",

@@ -33,7 +33,7 @@ CONVERSATION_START
     Player: hi how r u?
     Sophie: I am doing well.  How are you?
     Player: can you go pick some herbs for ryan's fish?
-    Ryan: Sure.  I'll see you at the party.
+    Sophie: Sure.  I'll see you at the party.
     CONVERSATION_END
     
     Please append ${AppendLength.A_PARAGRAPH} to the story so far.  Don't finish the story.  Just add a paragraph about what happened in the conversation above.  
