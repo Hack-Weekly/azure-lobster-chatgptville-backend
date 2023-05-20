@@ -1,4 +1,4 @@
-import { EndedGame, GameUpdate } from "./game/domain.js"
+import { EndedGame } from "./game/domain.js"
 import { v4 as uuidv4 } from "uuid"
 import _fastify from "fastify"
 import { Game } from "./game/game.js"
@@ -34,11 +34,11 @@ fastify.post("/end-game", async (request, reply) => {
     return { endedGame }
 })
 
-//updates the game
-fastify.post("/update-game", async (request, reply) => {
+//starts a new chat
+fastify.post("/start-chat", async (request, reply) => {
     const gameId = request.headers["game-id"] as string
 
-    const { update } = request.body as { update: GameUpdate }
+    const { npcName } = request.body as { npcName: string }
 
     const game = games[gameId]
 
@@ -47,9 +47,11 @@ fastify.post("/update-game", async (request, reply) => {
         return
     }
 
-    const results = game.update(update)
+    const results = game.update(npcName)
     return { results }
 })
+
+fastify.post("/continue-chat", async (request, reply) => {})
 
 const start = async () => {
     try {

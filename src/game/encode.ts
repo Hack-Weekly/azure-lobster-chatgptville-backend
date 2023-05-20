@@ -1,6 +1,12 @@
 import { openai } from "./game.js"
 import { chatgptvilleWorld } from "./defaults.js"
 
+enum AppendLength {
+    A_SENTENCE = "a sentence",
+    A_FEW_SENTENCES = "a few sentences",
+    A_PARAGRAPH = "a paragraph",
+}
+
 // function encodeLandmark(location: GameLocation) {
 //     return `The ${location.name} is ${location.description}`
 // }
@@ -18,12 +24,6 @@ function encodeStory(npcCount: number, storySoFar: string, appendLength: AppendL
     `
 }
 
-enum AppendLength {
-    A_SENTENCE = "a sentence",
-    A_FEW_SENTENCES = "a few sentences",
-    A_PARAGRAPH = "a paragraph",
-}
-
 //delete later
 let prompt = encodeStory(6, chatgptvilleWorld.preamble, AppendLength.A_PARAGRAPH)
 prompt += `
@@ -34,11 +34,11 @@ CONVERSATION_START
     Sophie: I am doing well.  How are you?
     Player: can you go pick some herbs for ryan's fish?
     Sophie: Sure.  I'll see you at the party.
-    CONVERSATION_END
+CONVERSATION_END
     
     Please append ${AppendLength.A_PARAGRAPH} to the story so far.  Don't finish the story.  Just add a paragraph about what happened in the conversation above.  
     
-    STORY_SO_FAR_START
+STORY_SO_FAR_START
     ${chatgptvilleWorld.preamble}\n\n
     Aaron was busy tending to his potato fields when he received a message from his friend, the player. The player had asked him to farm some potatoes for their party that night. Aaron was happy to oblige as he had been growing potatoes for over a decade and was quite good at it. He quickly responded to the player's request and promised to meet them at the party later that evening. As he continued to work in the fields, he couldn't help but feel excited about the upcoming party.
 \n

@@ -10,7 +10,7 @@
         "build": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1",
         "format": "prettier --write .",
-        "temp": "ts-node --esm --transpile-only ./src/game/encode.ts"
+        "cli": "ts-node --esm --transpile-only ./src/cli.ts"
     },
     "author": "",
     "license": "ISC",

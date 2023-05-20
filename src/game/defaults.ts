@@ -11,53 +11,32 @@ export const chatgptvilleWorld: World = {
 export const teamAzureLobster: Npc[] = [
     {
         name: "Rye",
-        bio: `Background: My name is Rye and I am currently a QA Engineer. Freshly graduated from college last year, excited to get started on this!
-Languages/Skills: Python, Vanilla Javascript, HTML/CSS
-Frameworks: N/A
-Desired Role: Backend engineer, could also serve as a project manager since I have background in Agile
-Timezone: Eastern Standard Time (EST) 
-`,
+        bio: ``,
         location: "The House",
     },
     {
         name: "Soaps",
-        bio: `Background: My name is Soaps and I am currently a student studying cs
-Languages/Skills: Javascript, Python, C/C++, HTML/CSS
-Frameworks: React, Vue
-Desired Role: Front-End
-Timezone: in Hong Kong rn but flying back to NA soon. sleep schedule is still in NA time LOL`,
+        bio: ``,
         location: "The Fishing Bridge",
     },
     {
         name: "Kickball",
-        bio: `Background: My name is Kickball and I’m an incoming freshman studying CS
-Languages/Skills: JS/TS, Python
-Frameworks: React, Next
-Desired Role: Frontend
-Timezone: CST`,
+        bio: ``,
         location: "The Farm",
     },
     {
         name: "Dqw",
-        bio: `Hey everyone!  Thanks for joining.  I'm Dqw.  I'm graduating in Dec.   I've mainly worked on reverse engineering games, but I'm looking to get better at web technologies.  Timezone:pst, but I'm jetlagged ATM`,
+        bio: ``,
         location: "The Rock",
     },
     {
         name: "Residentwitch",
-        bio: `Background: Hi! My name is Residentwitch. I am currently a CS sophomore.
-Languages/Skills: C, Python, HTML/CSS, JS, Java, Dart (beginner), Figma (beginner)
-Frameworks: React
-Desired Role: Frontend, could also work on UI
-Timezone: IST (Indian Standard Time)`,
+        bio: ``,
         location: "The Big Farm",
     },
     {
         name: "Motaphe",
-        bio: `Background: My name is Motaphe and I am a rising sophomore majoring in CS.
-Languages/Skills: Python
-Frameworks: React (beginner)
-Desired Role: Backend, Prompt Engineer, Frontend(since I have started learning React)
-Timezone: Eastern Standard Time (EST) `,
+        bio: ``,
         location: "The Lakehouse",
     },
 ]
