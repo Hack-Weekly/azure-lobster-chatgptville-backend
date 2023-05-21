@@ -22,7 +22,7 @@ fastify.post("/end-game", async (request, reply) => {
 
     const game = games[gameId]
     if (game) {
-        endedGames[gameId] = game.end()
+        endedGames[gameId] = await game.end()
     }
 
     delete games[gameId]
@@ -47,11 +47,43 @@ fastify.post("/start-chat", async (request, reply) => {
         return
     }
 
-    const results = game.update(npcName)
+    const results = await game.startChat(npcName)
     return { results }
 })
 
-fastify.post("/continue-chat", async (request, reply) => {})
+fastify.post("/continue-chat", async (request, reply) => {
+    const gameId = request.headers["game-id"] as string
+
+    const { message } = request.body as { message: string }
+
+    const game = games[gameId]
+
+    if (!game) {
+        reply.status(404).send("Game not found")
+        return
+    }
+
+    const results = await game.continueChat(message)
+    return { results }
+})
+
+fastify.get("/gpt-reply", async (request, reply) => {
+    const gameId = request.headers["game-id"] as string
+    const game = games[gameId]
+
+    if (!game) {
+        reply.status(404).send("Game not found")
+        return
+    }
+
+    const stream = game.gptReply
+    if (!stream) {
+        reply.status(404).send("Stream not found")
+        return
+    }
+
+    reply.send(stream)
+})
 
 const start = async () => {
     try {

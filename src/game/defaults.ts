@@ -1,6 +1,6 @@
 import { GameLocation, Npc, World } from "./domain.js"
 
-export const chatgptvilleWorld: World = {
+export const azureLobsterWorld: World = {
     //might need to substitute "chatgptville" with "harvestville" so it doesn't confuse the ai
     preamble:
         "Once upon a time there were six friends who went to live in the countryside. This is the story of one day in Chatgptville...",
@@ -8,7 +8,7 @@ export const chatgptvilleWorld: World = {
 }
 
 //💙
-export const teamAzureLobster: Npc[] = [
+export const azureLobsterNpcs: Npc[] = [
     {
         name: "Rye",
         bio: ``,
@@ -41,7 +41,7 @@ export const teamAzureLobster: Npc[] = [
     },
 ]
 
-export const chatgptvilleLocations: GameLocation[] = [
+export const azureLobsterLocations: GameLocation[] = [
     {
         name: "The House",
         description: "A house where the friends live and cook food.",

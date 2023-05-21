@@ -60,28 +60,28 @@ export type ChatMessage = {
     message: string
 }
 
-export enum ChatResultChoice {
+export enum ChatResultType {
     CONTINUE = "CONTINUE",
     FOLLOW_AND_CONTINUE = "FOLLOW_AND_CONTINUE", //walk to a differnt landmark and take the player and then continue chatting
-    WALK = "WALK", //walk to a different landmark
-    DO_NOTHING = "DO_NOTHING",
+    WALK = "WALK", //end chat and walk to a different location
+    DO_NOTHING = "DO_NOTHING", //end chat and do nothing
 }
 
 export type ContinueChatResult = {
-    type: ChatResultChoice.CONTINUE
+    type: ChatResultType.CONTINUE
 }
 export type FollowAndContinueChatResult = {
-    type: ChatResultChoice.FOLLOW_AND_CONTINUE
+    type: ChatResultType.FOLLOW_AND_CONTINUE
     landmark: string
 }
 export type WalkChatResult = {
-    type: ChatResultChoice.WALK
+    type: ChatResultType.WALK
     landmark: string
 }
 export type DoNothingChatResult = {
-    type: ChatResultChoice.DO_NOTHING
+    type: ChatResultType.DO_NOTHING
 }
-export type ChatResult = ContinueChatResult | FollowAndContinueChatResult | DoNothingChatResult
+export type ChatAction = ContinueChatResult | FollowAndContinueChatResult | DoNothingChatResult
 
 //end
 export type EndedGame = {
