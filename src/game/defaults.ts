@@ -1,9 +1,8 @@
 import { GameLocation, Npc, World } from "./domain.js"
 
 export const azureLobsterWorld: World = {
-    //might need to substitute "chatgptville" with "harvestville" so it doesn't confuse the ai
     preamble:
-        "Once upon a time there were six friends who went to live in the countryside. This is the story of one day in Chatgptville...",
+        "Once upon a time there were six friends who went to live in the countryside. This is the story of one day in HarvestVille...",
     objective: "the friends should work together to throw a party at the lakehouse later that night",
 }
 
