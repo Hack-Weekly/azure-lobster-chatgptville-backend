@@ -1,6 +1,6 @@
 import { encode } from "gpt-3-encoder"
 
-function tokenCount(s: string) {
+export function tokenCount(s: string) {
     return encode(s).length
 }
 
@@ -8,3 +8,5 @@ function tokenCount(s: string) {
 export async function scoreRealism(s: string) {
     return 0.5
 }
+
+export async function summarize(s: string) {}

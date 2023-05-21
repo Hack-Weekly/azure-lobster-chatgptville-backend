@@ -24,7 +24,7 @@ function encodeStory(npcCount: number, storySoFar: string, appendLength: AppendL
     `
 }
 
-//delete later
+//=========TEMP STUFF BELOW=========
 let prompt = encodeStory(6, azureLobsterWorld.preamble, AppendLength.A_PARAGRAPH)
 prompt += `
 The player had a conversation as follows:
@@ -98,6 +98,7 @@ const res = await openai.createChatCompletion(
     { responseType: "stream" }
 )
 
+// @ts-ignore
 res.data.on("data", (data) => {
     const dataString = data
         .toString()
