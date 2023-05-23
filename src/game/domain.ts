@@ -1,90 +1,77 @@
-//commons
+import { ChatCompletionRequestMessage } from "openai"
+
 export type WorldPosition = {
-    x: number
-    y: number
+	x: number
+	y: number
 }
 
 export type WorldArea = {
-    x1: number
-    y1: number
-    x2: number
-    y2: number
+	x1: number
+	y1: number
+	x2: number
+	y2: number
 }
 
-//world
-export type World = {
-    //player submitted text that is used at the beginning of our short story
-    preamble: string
-    //player submitted text that is used to instruct chatgpt on how to guide the story, but not used in the short story text
-    objective: string
+export type NPCDescription = {
+	name: string
+	bio: string
 }
-export type Npc = {
-    name: string
-    bio: string
-    location: string
+
+export type NPC = NPCDescription & {
+	location: string
+	journal?: string
 }
+
 export type GameLocation = {
-    name: string
-    description: string
-    position: WorldPosition
+	name: string
+	desc: string
 }
 
-//updates
-export type GameUpdate = {
-    worldUpdate: WorldUpdate
-    npcUpdates: NpcUpdate[]
-}
-export type WorldUpdate = {}
-export type NpcUpdate = {
-    npcName: string
+export type GameEventType = "CHAT" | "PLAYER_MOVED" | "NPC_MOVED" | "PLAYER_FOLLOWED_NPC"
+export const gameEventTypes: GameEventType[] = ["CHAT", "PLAYER_MOVED", "NPC_MOVED", "PLAYER_FOLLOWED_NPC"]
+export type GameEvent = {
+	type: GameEventType
+	message: string
 }
 
-export type GameUpdateResult = {
-    worldUpdateResult?: WorldUpdateResult
-    npcUpdateResults?: NpcUpdateResult[]
-    storyTokenCount: number
-    storySoFar: string
-}
-export type NpcUpdateResult = {
-    npcName: string
-}
-export type WorldUpdateResult = {}
-
-//chat
 export type Chat = {
-    npcName: string
-    messageHistory: ChatMessage[]
-}
-export type ChatMessage = {
-    name: string
-    message: string
+	npcName: string
+	messages: ChatCompletionRequestMessage[]
 }
 
-export enum ChatResultType {
-    CONTINUE = "CONTINUE",
-    FOLLOW_AND_CONTINUE = "FOLLOW_AND_CONTINUE", //walk to a differnt landmark and take the player and then continue chatting
-    WALK = "WALK", //end chat and walk to a different location
-    DO_NOTHING = "DO_NOTHING", //end chat and do nothing
-}
+export type ChatResultType =
+	| "CONTINUE"
+	| "FOLLOW_AND_CONTINUE" //walk to a differnt location and take the player and then continue chatting
+	| "WALK" //end chat and walk to a different location
+	| "DO_NOTHING" //end chat and do nothing
+export const chatResultTypes: ChatResultType[] = ["CONTINUE", "FOLLOW_AND_CONTINUE", "WALK", "DO_NOTHING"]
 
 export type ContinueChatResult = {
-    type: ChatResultType.CONTINUE
+	type: "CONTINUE"
 }
-export type FollowAndContinueChatResult = {
-    type: ChatResultType.FOLLOW_AND_CONTINUE
-    landmark: string
-}
-export type WalkChatResult = {
-    type: ChatResultType.WALK
-    landmark: string
-}
-export type DoNothingChatResult = {
-    type: ChatResultType.DO_NOTHING
-}
-export type ChatAction = ContinueChatResult | FollowAndContinueChatResult | DoNothingChatResult
 
-//end
+export type FollowAndContinueChatResult = {
+	type: "FOLLOW_AND_CONTINUE"
+	location: string
+}
+
+export type WalkChatResult = {
+	type: "WALK"
+	location: string
+}
+
+export type DoNothingChatResult = {
+	type: "DO_NOTHING"
+}
+
+export type ChatResult = ContinueChatResult | FollowAndContinueChatResult | WalkChatResult | DoNothingChatResult
+
 export type EndedGame = {
-    endedAt: Date
-    shortStory: string
+	endedAt: Date
+	shortStory: string
+}
+
+export type BufferedGptReply = {
+	buffer: NodeJS.ReadableStream
+	replySoFar: string
 }

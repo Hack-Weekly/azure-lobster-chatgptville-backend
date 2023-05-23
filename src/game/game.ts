@@ -1,71 +1,78 @@
 import * as dotenv from "dotenv"
-import { Configuration, OpenAIApi } from "openai"
-import { Chat, ChatAction, EndedGame, GameUpdate, Npc, World } from "./domain.js"
-import { azureLobsterNpcs } from "./defaults.js"
-import ReadableStream = NodeJS.ReadableStream
+import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai"
+import { BufferedGptReply, Chat, EndedGame, GameLocation, NPC, NPCDescription } from "./domain.js"
+import { promptChatStream } from "./request.js"
+import { encodeChatSystemMessage as encodeNpcChatInitialSystemMessage } from "./encode.js"
+import { defaultLocations, defaultNpcProfiles, defaultWorldDesc } from "./defaults.js"
 
 dotenv.config()
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+	apiKey: process.env.OPENAI_API_KEY,
 })
 
 if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY environment variable is not set")
+	throw new Error("OPENAI_API_KEY environment variable is not set")
 }
 
 console.log("key: " + process.env.OPENAI_API_KEY)
 export const openai = new OpenAIApi(configuration)
 
 export class Game {
-    npcs: Npc[]
-    world: World
-    chat?: Chat
-    storySoFar: string
-    gptReply?: ReadableStream
+	startedAt: Date = new Date()
+	worldDesc: string
+	locations: GameLocation[]
+	npcs: NPC[]
+	events: string[]
+	chat?: Chat
+	gptReply?: BufferedGptReply
 
-    constructor(npcs: Npc[], world: World) {
-        this.npcs = npcs
-        this.world = world
-        this.storySoFar = world.preamble + "\n\n"
-    }
+	constructor(worldDesc: string) {
+		this.worldDesc = worldDesc
+	}
 
-    static async create() {
-        const npcs = createNpcs()
-        const worldState = createWorldState()
-        return new Game(npcs, worldState)
-    }
+	static create() {
+		const game = new Game(defaultWorldDesc)
+		game.locations = defaultLocations
+		game.initNpcs(defaultNpcProfiles)
+		return game
+	}
 
-    async update(update: GameUpdate) {
-        throw new Error("Not implemented") //todo
-    }
+	initNpcs(npcProfiles: NPCDescription[]) {
+		this.npcs = npcProfiles.map((desc, i) => {
+			return desc && ({ location: this.locations[i].name } as NPC)
+		})
+	}
 
-    async startChat(npcId: string): Promise<ChatAction> {
-        if (this.chat) throw new Error("already have a chat with npc: " + this.chat.npcName)
+	async startChat(npcName: string) {
+		const npc = this.getNpc(npcName)
+		if (!npc) throw new Error("no npc found with name: " + npcName)
 
-        throw new Error("Not implemented") //todo
-    }
+		const prompt = await encodeNpcChatInitialSystemMessage(this, npc.name)
 
-    async continueChat(playerMessage: String): Promise<ChatAction> {
-        throw new Error("Not implemented") //todo
-    }
+		const chat = { npcName: npc.name, messages: [{ role: "system", content: prompt } as ChatCompletionRequestMessage] }
+		this.chat = chat
+		this.gptReply = await promptChatStream(chat.messages, (s) => chat.messages.push({ role: "assistant", content: s }))
+	}
 
-    async endChat(): Promise<ChatAction> {
-        throw new Error("Not implemented") //todo
-    }
+	async continueChat(playerMessage: string) {
+		const chat = this.chat
+		if (!chat) throw new Error("no current chat")
 
-    async end(): Promise<EndedGame> {
-        throw new Error("Not implemented") //todo
-    }
-}
+		chat.messages.push({ role: "user", content: playerMessage })
+		this.gptReply = await promptChatStream(chat.messages, (s) => chat.messages.push({ role: "assistant", content: s }))
+	}
 
-function createWorldState(): World {
-    throw new Error("Not implemented") //todo
-}
+	async endChat() {
+		throw new Error("Not implemented") //todo
+	}
 
-function createNpcs(): Npc[] {
-    return azureLobsterNpcs
-}
+	async end(): Promise<EndedGame> {
+		throw new Error("Not implemented") //todo
+	}
 
-function createNpc(): Npc {
-    throw new Error("Not implemented") //todo
+	getNpc(npcName: string) {
+		const npc = this.npcs.find((npc) => npc.name === npcName)
+		if (!npc) throw new Error("no npc found with name: " + npcName)
+		return npc
+	}
 }
