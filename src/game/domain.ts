@@ -27,44 +27,22 @@ export type GameLocation = {
 	desc: string
 }
 
-export type GameEventType = "CHAT" | "PLAYER_MOVED" | "NPC_MOVED" | "PLAYER_FOLLOWED_NPC"
-export const gameEventTypes: GameEventType[] = ["CHAT", "PLAYER_MOVED", "NPC_MOVED", "PLAYER_FOLLOWED_NPC"]
-export type GameEvent = {
-	type: GameEventType
-	message: string
-}
-
 export type Chat = {
 	npcName: string
 	messages: ChatCompletionRequestMessage[]
 }
 
-export type ChatResultType =
-	| "CONTINUE"
-	| "FOLLOW_AND_CONTINUE" //walk to a differnt location and take the player and then continue chatting
-	| "WALK" //end chat and walk to a different location
-	| "DO_NOTHING" //end chat and do nothing
-export const chatResultTypes: ChatResultType[] = ["CONTINUE", "FOLLOW_AND_CONTINUE", "WALK", "DO_NOTHING"]
-
-export type ContinueChatResult = {
-	type: "CONTINUE"
+export enum NPCChoice {
+	CONTINUE_CHAT = "CONTINUE_CHAT",
+	SAY_GOODBYE_AND_GO_TO_ = "SAY_GOODBYE_AND_GO_TO_",
+	SAY_GOODBYE = "SAY_GOODBYE",
 }
 
-export type FollowAndContinueChatResult = {
-	type: "FOLLOW_AND_CONTINUE"
-	location: string
-}
-
-export type WalkChatResult = {
-	type: "WALK"
-	location: string
-}
-
-export type DoNothingChatResult = {
-	type: "DO_NOTHING"
-}
-
-export type ChatResult = ContinueChatResult | FollowAndContinueChatResult | WalkChatResult | DoNothingChatResult
+export const NPC_CHOICES: NPCChoice[] = [
+	NPCChoice.CONTINUE_CHAT,
+	NPCChoice.SAY_GOODBYE,
+	NPCChoice.SAY_GOODBYE_AND_GO_TO_,
+]
 
 export type EndedGame = {
 	endedAt: Date

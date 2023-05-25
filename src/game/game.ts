@@ -1,9 +1,14 @@
 import * as dotenv from "dotenv"
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai"
-import { BufferedGptReply, Chat, EndedGame, GameLocation, NPC, NPCDescription } from "./domain.js"
+import { Chat, EndedGame, GameLocation, NPC, NPCChoice, NPCDescription } from "./domain.js"
 import { promptChatStream } from "./request.js"
-import { encodeChatSystemMessage as encodeNpcChatInitialSystemMessage } from "./encode.js"
-import { defaultLocations, defaultNpcProfiles, defaultWorldDesc } from "./defaults.js"
+import {
+	encodeChatReplySystemMessage,
+	encodeChatStartSystemMessage,
+	encodeChoices,
+} from "./encode.js"
+import { defaultLocations, defaultNpcDescs, defaultWorldDesc } from "./defaults.js"
+import * as changeCase from "change-case"
 
 dotenv.config()
 const configuration = new Configuration({
@@ -22,9 +27,8 @@ export class Game {
 	worldDesc: string
 	locations: GameLocation[]
 	npcs: NPC[]
-	events: string[]
+	events: string[] = []
 	chat?: Chat
-	gptReply?: BufferedGptReply
 
 	constructor(worldDesc: string) {
 		this.worldDesc = worldDesc
@@ -33,13 +37,13 @@ export class Game {
 	static create() {
 		const game = new Game(defaultWorldDesc)
 		game.locations = defaultLocations
-		game.initNpcs(defaultNpcProfiles)
+		game.initNpcs(defaultNpcDescs)
 		return game
 	}
 
-	initNpcs(npcProfiles: NPCDescription[]) {
-		this.npcs = npcProfiles.map((desc, i) => {
-			return desc && ({ location: this.locations[i].name } as NPC)
+	initNpcs(npcDescs: NPCDescription[]) {
+		this.npcs = npcDescs.map((desc, i) => {
+			return { ...desc, location: this.locations[i].name } as unknown as NPC
 		})
 	}
 
@@ -47,19 +51,80 @@ export class Game {
 		const npc = this.getNpc(npcName)
 		if (!npc) throw new Error("no npc found with name: " + npcName)
 
-		const prompt = await encodeNpcChatInitialSystemMessage(this, npc.name)
+		const chat = {
+			npcName: npc.name,
+			messages: [
+				{
+					role: "system",
+					content: encodeChatStartSystemMessage(this, npc.name),
+				} as ChatCompletionRequestMessage,
+			],
+		} as Chat
 
-		const chat = { npcName: npc.name, messages: [{ role: "system", content: prompt } as ChatCompletionRequestMessage] }
+		let reply = await promptChatStream(chat.messages, (s) => {
+			console.log("got reply: " + s)
+
+			chat.messages.push({
+				role: "assistant",
+				content: s.replace('"', ""),
+			})
+		})
+
 		this.chat = chat
-		this.gptReply = await promptChatStream(chat.messages, (s) => chat.messages.push({ role: "assistant", content: s }))
+
+		return reply
 	}
 
 	async continueChat(playerMessage: string) {
 		const chat = this.chat
 		if (!chat) throw new Error("no current chat")
 
-		chat.messages.push({ role: "user", content: playerMessage })
-		this.gptReply = await promptChatStream(chat.messages, (s) => chat.messages.push({ role: "assistant", content: s }))
+		chat.messages.push({ role: "user", content: playerMessage } as ChatCompletionRequestMessage)
+
+		let locationsConstantCase = {}
+		this.locations.forEach((it) => {
+			let constantCase = changeCase.constantCase(it.name)
+			locationsConstantCase[constantCase] = it.name
+		})
+
+		let choices = encodeChoices(
+			this.locations.map((it) => it.name),
+			this.getNpc(this.chat.npcName).location
+		)
+
+		let prompt = chat.messages.slice()
+		prompt.push({
+			role: "system",
+			content: encodeChatReplySystemMessage(this, chat.npcName, choices),
+		} as ChatCompletionRequestMessage)
+
+		return await promptChatStream(prompt, (reply) => {
+			let end = reply.indexOf("\n")
+			if (end == -1) end = reply.length
+
+			let choice = reply.substring(0, end).trim()
+			if (!choices.includes(choice)) throw new Error("invalid choice: " + choice)
+
+			chat.messages.push({
+				role: "assistant",
+				content: reply,
+			})
+
+			if (choice.startsWith(NPCChoice.SAY_GOODBYE_AND_GO_TO_)) {
+				let location =
+					locationsConstantCase[choice.substring(NPCChoice.SAY_GOODBYE_AND_GO_TO_.length).trim()]
+
+				if (!location) {
+					throw new Error("invalid location: " + location)
+				}
+
+				console.log(`npc:${chat.npcName} new location:${location}`)
+				this.getNpc(chat.npcName).location = location
+				this.chat = undefined
+			} else if (choice == NPCChoice.SAY_GOODBYE) {
+				this.chat = undefined
+			}
+		})
 	}
 
 	async endChat() {

@@ -2,6 +2,7 @@ import { EndedGame } from "./game/domain.js"
 import _fastify from "fastify"
 import { Game } from "./game/game.js"
 import * as dotenv from "dotenv"
+import { v4 as uuidv4 } from "uuid"
 
 dotenv.config()
 
@@ -29,14 +30,7 @@ const endedGames: Record<string, EndedGame> = {}
 
 //starts a new game
 fastify.post("/start-game", async (request, reply) => {
-	const { worldDescription } = request.body as { worldDescription: string }
-
-	if (!worldDescription) {
-		reply.status(422)
-		return "need worldDescription"
-	}
-
-	let gameId = "feaf7740-b310-4d48-86e1-d352f96fab82" // uuidv4()
+	let gameId = uuidv4()
 	games[gameId] = Game.create()
 	return { gameId }
 })
@@ -77,8 +71,7 @@ fastify.post("/start-chat", async (request, reply) => {
 		return `game not found with id ${gameId}`
 	}
 
-	const results = await game.startChat(npcName)
-	return { results }
+	return await game.startChat(npcName)
 })
 
 fastify.post("/continue-chat", async (request, reply) => {
@@ -93,29 +86,7 @@ fastify.post("/continue-chat", async (request, reply) => {
 		return `game not found with id ${gameId}`
 	}
 
-	const results = await game.continueChat(message)
-	return { results }
-})
-
-fastify.get("/gpt-reply", async (request, reply) => {
-	const gameId = request.headers["game-id"] as string
-
-	const game = games[gameId]
-
-	if (!game) {
-		reply.status(404)
-		return `game not found with id ${gameId}`
-	}
-
-	const gptReply = game.gptReply
-	if (!gptReply) {
-		reply.status(409)
-		return `no gptReply found for game with id ${gameId}`
-	}
-
-	game.gptReply = undefined
-
-	return gptReply.buffer
+	return await game.continueChat(message)
 })
 
 async function start() {

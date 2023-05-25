@@ -1,58 +1,49 @@
-import { GameLocation, NPCDescription as NPCProfile } from "./domain.js"
+import { GameLocation, NPCDescription } from "./domain.js"
 
-export const defaultWorldDesc = `
-`
+export const defaultWorldDesc = ``
 
-export const defaultNpcProfiles: NPCProfile[] = [
+export const defaultNpcDescs: NPCDescription[] = [
 	{
 		name: "Rye",
-		bio: ``,
+		bio: `A friendly cook.`,
 	},
 	{
 		name: "Soaps",
-		bio: ``,
+		bio: `A magic cat`,
 	},
 	{
 		name: "Kickball",
-		bio: ``,
-	},
-	{
-		name: "Dqw",
-		bio: ``,
+		bio: `A funny turtle with the nickname "Kickball"`,
 	},
 	{
 		name: "Residentwitch",
-		bio: ``,
+		bio: `Not much is known about her.  VERY MYSTERIOUS`,
 	},
 	{
 		name: "Motaphe",
-		bio: ``,
+		bio: `Tall and likes orange juice.`,
 	},
 ]
 
 export const defaultLocations: GameLocation[] = [
 	{
-		name: "The House",
+		name: "house",
 		desc: "A house with a kitchen and beds.",
 	},
 	{
-		name: "The Fishing Bridge",
+		name: "fishing bridge",
 		desc: "A bridge for fishing.",
 	},
 	{
-		name: "The Small Farm",
+		name: "small farm",
 		desc: "A farm with for growing specialty ingredients such as herbs, tomatoes, and berries.",
 	},
 	{
-		name: "The Big Farm",
+		name: "big farm",
 		desc: "A big farm for growing staple foods like grain, rice, and wheat.",
 	},
 	{
-		name: "The Rock",
-		desc: "A big rock.",
-	},
-	{
-		name: "The Lakehouse",
+		name: "lakehouse",
 		desc: "A lakehouse for recreational activities.",
 	},
 ]
